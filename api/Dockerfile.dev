@@ -1,0 +1,16 @@
+FROM ruby:2.6
+
+RUN gem install bundler --version "2.0.2"
+
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install --no-install-recommends -y ca-certificates nodejs \
+    libicu-dev imagemagick unzip qt5-default libqt5webkit5-dev \
+    gstreamer1.0-plugins-base gstreamer1.0-tools gstreamer1.0-x \
+    xvfb xauth --fix-missing
+
+WORKDIR /usr/src/app
+ADD Gemfile /usr/src/app/Gemfile
+ADD Gemfile.lock /usr/src/app/Gemfile.lock
+RUN bundle install
+
+CMD rm -f /usr/src/app/tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'

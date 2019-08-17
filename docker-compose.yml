@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./api:/usr/src/app
+    ports:
+      - 3000:3000
+    environment:
+      RACK_ENV: development
+      RAILS_ENV: development
+      APP_DATABASE_HOST: db
+      APP_DATABASE_USER: app
+      APP_DATABASE_PASSWORD: 3x4mpl3p4S5w3Rd
+    depends_on:
+      - db
+    networks:
+      - app-tier
+    links:
+      - db:db
+
+
+  db:
+    build:
+      context: ./db
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: app_development
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: 3x4mpl3p4S5w3Rd
+    networks:
+      - app-tier
+
+networks:
+  app-tier:
+    driver: bridge
