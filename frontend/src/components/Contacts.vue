@@ -1,7 +1,11 @@
 <template>
  <div id="contacts">
   <div v-for="(contact) in contacts" :key="contact.id">
-   <p>{{contact.name}} is my {{contact.relationship}}</p>
+      <b-card :title="contact.name" class="mb-3">
+        <b-card-text>
+          {{contact.name}} is my {{contact.relationship}}
+        </b-card-text>
+      </b-card>
   </div>
  </div>
 </template>
@@ -31,3 +35,10 @@ export default {
   }
 }
 </script>
+
+<style>
+#contacts {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+</style>
