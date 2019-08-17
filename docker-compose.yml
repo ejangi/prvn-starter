@@ -1,6 +1,40 @@
 version: '3'
 
 services:
+  web:
+    image: nginx:latest
+    restart: always
+    ports:
+        - "80:80"
+    volumes:
+        - ./web/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - api
+      - frontend
+    networks:
+      - app-tier
+    links:
+      - api
+      - frontend
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    user: node
+    working_dir: /home/node/app
+    volumes:
+      - ./frontend:/home/node/app
+    ports:
+      - 8080:8080
+    command: npm run dev
+    environment:
+      HOST: '0.0.0.0'
+    depends_on:
+      - api
+    networks:
+      - app-tier
+
   api:
     build:
       context: ./api
@@ -19,6 +53,7 @@ services:
       - db
     networks:
       - app-tier
+      - db-tier
     links:
       - db:db
 
@@ -36,23 +71,11 @@ services:
       POSTGRES_USER: app
       POSTGRES_PASSWORD: 3x4mpl3p4S5w3Rd
     networks:
-      - app-tier
+      - db-tier
 
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
-    user: node
-    working_dir: /home/node/app
-    volumes:
-      - ./frontend:/home/node/app
-    ports:
-      - 8080:8080
-    command: npm run dev
-    environment:
-      HOST: '0.0.0.0'
 
 networks:
   app-tier:
+    driver: bridge
+  db-tier:
     driver: bridge
