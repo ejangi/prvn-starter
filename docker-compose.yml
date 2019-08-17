@@ -38,6 +38,21 @@ services:
     networks:
       - app-tier
 
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    user: node
+    working_dir: /home/node/app
+    volumes:
+      - ./frontend:/home/node/app
+    ports:
+      - 8080:8080
+    command: npm run dev
+    environment:
+      HOST: '0.0.0.0'
+
 networks:
   app-tier:
     driver: bridge

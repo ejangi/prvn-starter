@@ -16,3 +16,5 @@ api/.byebug_history
 
 # Ignore master key for decrypting credentials and more.
 api/config/master.key
+
+frontend/node_modules
