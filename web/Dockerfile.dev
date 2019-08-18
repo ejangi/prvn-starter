@@ -1,0 +1,8 @@
+FROM nginx:1.17.3
+
+WORKDIR /usr/share/nginx
+
+ADD wait-for-it.sh /usr/share/nginx
+ADD docker-entrypoint.sh /usr/share/nginx
+
+CMD nginx -g 'daemon off;'

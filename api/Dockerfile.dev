@@ -11,6 +11,7 @@ RUN apt-get update && apt-get upgrade -y && \
 WORKDIR /usr/src/app
 ADD Gemfile /usr/src/app/Gemfile
 ADD Gemfile.lock /usr/src/app/Gemfile.lock
+ADD wait-for-it.sh /usr/src/app/wait-for-it.sh
 RUN bundle install
 
-CMD rm -f /usr/src/app/tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'
+CMD rm -f /usr/src/app/tmp/pids/server.pid && bundle exec rake db:setup_or_migrate && bundle exec rails s -p 3000 -b '0.0.0.0'

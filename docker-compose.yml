@@ -2,7 +2,10 @@ version: '3'
 
 services:
   web:
-    image: nginx:latest
+    build:
+      context: ./web
+      dockerfile: Dockerfile.dev
+    command: ./wait-for-it.sh frontend:8080 -- ./docker-entrypoint.sh
     restart: always
     ports:
         - "80:80"
@@ -21,13 +24,13 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
+    command: ./wait-for-it.sh api:3000 -- ./docker-entrypoint.sh
     user: node
     working_dir: /home/node/app
     volumes:
       - ./frontend:/home/node/app
     ports:
       - 8080:8080
-    command: npm run dev
     environment:
       HOST: '0.0.0.0'
     depends_on:
@@ -39,6 +42,7 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile.dev
+    command: ./wait-for-it.sh db:5432 -- ./docker-entrypoint.sh
     volumes:
       - ./api:/usr/src/app
     ports:

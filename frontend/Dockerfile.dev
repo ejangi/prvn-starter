@@ -1,1 +1,9 @@
 FROM node:12.8
+
+WORKDIR /home/node/app
+
+ADD package.json /home/node/app/package.json
+ADD package-lock.json /home/node/app/package-lock.json
+ADD wait-for-it.sh /usr/src/app/wait-for-it.sh
+
+CMD npm install && npm run dev
